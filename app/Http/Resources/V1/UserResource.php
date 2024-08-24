@@ -20,27 +20,6 @@ class UserResource extends JsonResource
             'attributes' => [
                 'name' => $this->name,
                 'email' => $this->email,
-                // // method one
-                // 'emailVerifiedAt' => $this->when(
-                //     // include it for all users.* routes
-                //     $request->routeIs('users.*'),
-                //     $this->email_verified_at
-                // ),
-                // // method one
-                // 'createdAt' => $this->when(
-                //     // include it for all users.* routes
-                //     $request->routeIs('users.*'),
-                //     $this->created_at
-                // ),
-                // // method one
-                // 'updatedAt' => $this->when(
-                //     // include it for all users.* routes
-                //     $request->routeIs('users.*'),
-                //     $this->updated_at
-                // ),
-
-                // a better alternative....
-                // method two using 'mergeWhen()'
                 $this->mergeWhen(
                     $request->routeIs('users.*'),
                     [
@@ -49,7 +28,8 @@ class UserResource extends JsonResource
                         'updatedAt' => $this->updated_at
                     ]
                 ),
-            ]
+            ],
+            'includes' => TicketResource::collection($this->whenLoaded('tickets'))
         ];
     }
 }

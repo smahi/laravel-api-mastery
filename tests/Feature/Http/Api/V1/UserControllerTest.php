@@ -10,7 +10,11 @@ it('returns a list of users', function () {
 
     Sanctum::actingAs($user);
 
-    $response = getJson(route('users.index'))
+    $response = getJson(route('users.index', ['include' => 'tickets']));
+
+    // dd($response->json()['data'][0]);
+
+    $response
         ->assertOk()
         ->assertExactJsonStructure([
             'data' => [
@@ -23,13 +27,113 @@ it('returns a list of users', function () {
                         'emailVerifiedAt',
                         'createdAt',
                         'updatedAt'
+                    ],
+                    'includes' => [
+                        '*' => [
+                            'type',
+                            'id',
+                            'attributes' => [
+                                'title',
+                                'status',
+                                'createdAt',
+                                'updatedAt'
+                            ],
+                            'relationships' => [
+                                'author' => [
+                                    'data' => [
+                                        'type',
+                                        'id'
+                                    ],
+                                    'links'
+                                ]
+                            ],
+                            'links'
+                        ]
+
                     ]
+                ]
+            ],
+            'links',
+            'meta'
+        ]);
+});
+
+it('returns a list of users without tickets', function () {
+    $user = User::factory()->create();
+
+    Sanctum::actingAs($user);
+
+    $response = getJson(route('users.index'));
+
+    // dd($response->json()['data'][0]);
+
+    $response
+        ->assertOk()
+        ->assertExactJsonStructure([
+            'data' => [
+                '*' => [
+                    'type',
+                    'id',
+                    'attributes' => [
+                        'name',
+                        'email',
+                        'emailVerifiedAt',
+                        'createdAt',
+                        'updatedAt'
+                    ],
+                ]
+            ],
+            'links',
+            'meta'
+        ]);
+});
+
+it('return a user for the given user id', function () {
+    $user = User::factory()->create();
+
+    Sanctum::actingAs($user);
+
+    $response = getJson(route('users.show', ['user' => $user->id, 'include' => 'tickets']))
+        ->assertOk()
+        ->assertExactJsonStructure([
+            'data' => [
+                'type',
+                'id',
+                'attributes' => [
+                    'name',
+                    'email',
+                    'emailVerifiedAt',
+                    'createdAt',
+                    'updatedAt'
+                ],
+                'includes' => [
+                    '*' => [
+                        'type',
+                        'id',
+                        'attributes' => [
+                            'title',
+                            'status',
+                            'createdAt',
+                            'updatedAt'
+                        ],
+                        'relationships' => [
+                            'author' => [
+                                'data' => [
+                                    'type',
+                                    'id'
+                                ],
+                                'links'
+                            ]
+                        ],
+                        'links'
+                    ]
+
                 ]
             ]
         ]);
 });
 
-it('return a user for the given user id', function () {
+it('return a user for the given user id without including tickets', function () {
     $user = User::factory()->create();
 
     Sanctum::actingAs($user);
@@ -46,7 +150,7 @@ it('return a user for the given user id', function () {
                     'emailVerifiedAt',
                     'createdAt',
                     'updatedAt'
-                ]
+                ],
             ]
         ]);
 });

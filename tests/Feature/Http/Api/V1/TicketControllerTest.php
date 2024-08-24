@@ -61,7 +61,7 @@ use function Pest\Laravel\getJson;
 
 it('return a ticket for given id', function () {
     $user = User::factory()->create();
-    $ticket = Ticket::factory()->for($user)->create();
+    $ticket = Ticket::factory()->for($user, 'author')->create();
 
     Sanctum::actingAs($user);
     $response = getJson(route('tickets.show', ['ticket' => $ticket->id, 'include' => 'author']))
@@ -97,7 +97,7 @@ it('return a ticket for given id', function () {
 
 it('return a ticket for given id without including author', function () {
     $user = User::factory()->create();
-    $ticket = Ticket::factory()->for($user)->create();
+    $ticket = Ticket::factory()->create(['user_id' => $user->id]);
 
     Sanctum::actingAs($user);
     $response = getJson(route('tickets.show', ['ticket' => $ticket->id]))
