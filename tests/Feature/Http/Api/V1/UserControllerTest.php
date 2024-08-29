@@ -50,6 +50,9 @@ it('returns a list of users', function () {
                             'links'
                         ]
 
+                    ],
+                    'links' => [
+                        'self'
                     ]
                 ]
             ],
@@ -81,6 +84,9 @@ it('returns a list of users without tickets', function () {
                         'createdAt',
                         'updatedAt'
                     ],
+                    'links' => [
+                        'self'
+                    ]
                 ]
             ],
             'links',
@@ -128,6 +134,9 @@ it('return a user for the given user id', function () {
                         'links'
                     ]
 
+                ],
+                'links' => [
+                    'self'
                 ]
             ]
         ]);
@@ -138,7 +147,11 @@ it('return a user for the given user id without including tickets', function () 
 
     Sanctum::actingAs($user);
 
-    $response = getJson(route('users.show', ['user' => $user->id]))
+    $response = getJson(route('users.show', ['user' => $user->id]));
+
+    // dd($response->json());
+
+    $response
         ->assertOk()
         ->assertExactJsonStructure([
             'data' => [
@@ -151,6 +164,9 @@ it('return a user for the given user id without including tickets', function () 
                     'createdAt',
                     'updatedAt'
                 ],
+                'links' => [
+                    'self'
+                ]
             ]
         ]);
 });
