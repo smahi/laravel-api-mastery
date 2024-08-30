@@ -16,7 +16,7 @@ class TicketController extends ApiBaseController
     {
 
         if ($this->include('author')) {
-            return TicketResource::collection(Ticket::with('user')->paginate());        //
+            return TicketResource::collection(Ticket::with('author')->paginate());        //
         }
 
         return TicketResource::collection(Ticket::paginate());        //

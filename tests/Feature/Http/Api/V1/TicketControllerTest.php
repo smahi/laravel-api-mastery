@@ -9,55 +9,57 @@ use Laravel\Sanctum\Sanctum;
 use function Pest\Laravel\get;
 use function Pest\Laravel\getJson;
 
-// it('return a list of tickets', function () {
-//     $user = User::factory()->create();
+it('return a list of tickets', function () {
+    $user = User::factory()->create();
 
-//     Sanctum::actingAs($user);
+    Sanctum::actingAs($user);
 
-//     // $response = getJson(route('tickets.index', ['include' => 'author']))
-//     $response = getJson(route('tickets.index'))
-//         ->assertStatus(200);
-// ->assertExactJsonStructure([
-//     'data' => [
-//         '*' => [
-//             'type',
-//             'id',
-//             'attributes' => [
-//                 'title',
-//                 'status',
-//                 'createdAt',
-//                 'updatedAt'
-//             ],
-//             'relationships' => [
-//                 'author' => [
-//                     'data' => [
-//                         'type',
-//                         'id'
-//                     ],
-//                     'links' => [
-//                         'self'
-//                     ]
-
-//                 ],
-//             ],
-//             'includes' => [
-//                 '*' => [
-//                     'type',
-//                     'id',
-//                     'attributes' => [
-//                         'name',
-//                         'email',
-
-//                     ]
-//                 ]
-//             ],
-//             'links' => ['self'],
-//         ],
-//     ],
-//     'meta',
-//     'links'
-// ]);
-// });
+    $response = getJson(route('tickets.index', ['include' => 'author']))
+        // $response = getJson(route('tickets.index'))
+        ->assertStatus(200)
+        // dd($response->json()['data'][0]);
+        ->assertExactJsonStructure([
+            'data' => [
+                '*' => [
+                    'type',
+                    'id',
+                    'attributes' => [
+                        'title',
+                        'status',
+                        'createdAt',
+                        'updatedAt',
+                    ],
+                    'includes' => [
+                        'type',
+                        'id',
+                        'attributes' => [
+                            'name',
+                            'email',
+                        ],
+                        'links' => [
+                            'self',
+                        ],
+                    ],
+                    'relationships' => [
+                        'author' => [
+                            'data' => [
+                                'type',
+                                'id',
+                            ],
+                            'links' => [
+                                'self',
+                            ],
+                        ],
+                    ],
+                    'links' => [
+                        'self',
+                    ],
+                ],
+            ],
+            'meta',
+            'links'
+        ]);
+});
 
 it('return a ticket for given id', function () {
     $user = User::factory()->create();
