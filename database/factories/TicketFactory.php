@@ -22,7 +22,8 @@ class TicketFactory extends Factory
             'title' => fake()->words(3, true),
             'description' => fake()->paragraph(),
             // A = Active, C=Completed, H=Hold, X=Cancel
-            'status' => fake()->randomElement(['A', 'C', 'H', 'X'])
+            'status' => fake()->randomElement(['A', 'C', 'H', 'X']),
+            'created_at' => fake()->dateTimeBetween('-1 years', 'now'),
         ];
     }
 }
